@@ -7,42 +7,85 @@
 // stories or storytellers.
 
 
+
+
+
 //Input: length,moral lessons,age group, 
 //Process: datermine class, determine methods to achieve output
 //Output: Stories being passed down from generation to generation,translation into different languages, oral stories
 
-class AncestralStrories{
-    constructor(length,moralLesson,ageGroup,language){
-        this.length=length;
-        this.moralLesson=moralLesson;
-        this.ageGroup=ageGroup;
-        this.language=language;
+class Story {
+  constructor(name, length, moralLessons, ageGroup, language) {
+      this.name = name;
+      this.length = length;
+      this.moralLessons = moralLessons;
+      this.ageGroup = ageGroup;
+      this.language = language;
+  }
 
-    }
-    story(story){
-        console.log(`The Story in of length ${this.length} appropriate for ${this.ageGroup} of ${this.language} language and the moral lesso is ${this.moralLesson}`);
-        
-    }
-    storyTeller(){
-
-
-    }
-    translator(story, language){
-        if(story!=language){
-            console.log(`translate into ${this.language}`);
-        }
-        else{
-            console.log(`{story} is in ${this.language}`);
-        }
-    }
+  displayProperties() {
+      return `Story name: ${this.name}, Story length: ${this.length}, Language: ${this.language}, Age Group: ${this.ageGroup.join('-')} and Moral lessons: ${this.moralLessons}`;
+  }
 }
 
+class StoryTeller extends Story {
+  constructor(length, moralLessons, ageGroup) {
+      super('', length, moralLessons, ageGroup, '');
+      this.length = length;
+      this.moralLessons = moralLessons;
+      this.ageGroup = ageGroup;
+  }
 
-class Story extends AncestralStrories{
-    constructor(length,moralLesson,ageGroup,language){
-        super(length,moralLesson,ageGroup,language);
-    }
+  isAppropriate(age) {
+      if (age >= this.ageGroup[0] && age <= this.ageGroup[1]) {
+          return "Is appropriate to hear";
+      } else {
+          return "Inappropriate to hear";
+      }
+  }
+
+  gaugeAttentionSpan(maxLength) {
+      if (maxLength >= this.length) {
+          return "The audience can be attentive throughout the story";
+      } else {
+          return "The audience will get bored";
+      }
+  }
+
+  appropriateMoralLesson(lesson) {
+      if (lesson === this.moralLessons) {
+          return "Is appropriate to hear";
+      } else {
+          return "Inappropriate to hear";
+      }
+  }
 }
+
+class Translator extends Story {
+  constructor(name, length, moralLessons, ageGroup, language) {
+    super(name, length, moralLessons, ageGroup, language);
+  }
+
+  translateStory(audienceLanguage) {
+      if (audienceLanguage !== this.language) {
+          return "Translate story";
+      } else {
+          return "No need to translate";
+      }
+  }
+}
+
+let story1 = new Story("Blood", 400, "sex education", [14, 18], "English");
+console.log(story1.displayProperties());
+
+let person1 = new StoryTeller(200, "religion", [5, 10]);
+console.log(person1.appropriateMoralLesson("patience"));
+console.log(person1.isAppropriate(17));
+console.log(person1.gaugeAttentionSpan(300));
+
+let audience1 = new Translator("Kiluhya");
+console.log(audience1.translateStory("French"));
+
 
 
 // **African Cuisine:** You're creating a recipe app specifically for African cuisine.
@@ -66,41 +109,170 @@ class Story extends AncestralStrories{
 // process: determine classes 
 
 class Species {
-    constructor(name, diet, lifespan,migration) {
-      this.name = name;
-      this.diet = diet;
-      this.lifespan = lifespan;
-      this.migration=migration;
+  constructor(name, diet, typicalLifespan) {
+    this.name = name;
+    this.diet = diet;
+    this.typicalLifespan = typicalLifespan;
+  }
+
+  calculateMortalityYear(birthYear) {
+    const mortalityYear = birthYear + this.typicalLifespan;
+    return mortalityYear;
+  }
+
+  getDiet() {
+    return `${this.name} is a ${this.diet}.`;
+  }
+
+  displayInfo() {
+    console.log(`Species: ${this.name}`);
+    console.log(`Diet: ${this.diet}`);
+    console.log(`Typical Lifespan: ${this.typicalLifespan} years`);
+  }
+}
+
+class Predator extends Species {
+  constructor(name, diet, lifespan, huntingMethod) {
+    super(name, diet, lifespan);
+    this.huntingMethod = huntingMethod;
+  }
+
+
+
+  predictMigration(season) {
+    if (season === 'dry') {
+      return 'Migration will occur.';
+    } else if (season === 'wet') {
+      return 'No migration will occur.';
+    } else {
+      return 'Unable to predict migration.';
     }
   }
-  
-  class Predator extends Species {
-    constructor(name, diet, lifespan, huntingMethod) {
-      super(name, diet, lifespan);
-      this.huntingMethod = huntingMethod;
-    }
-  
-    hunt(prey) {
-      console.log(`${this.name} is hunting ${prey.name}`);
+
+  displayInfo() {
+    console.log('--- Predator ---');
+    console.log(`Species: ${this.name}`);
+    console.log(`Diet: ${this.diet}`);
+    console.log(`Typical Lifespan: ${this.typicalLifespan} years`);
+    console.log(`Migration Patterns: ${this.migrationPatterns}`);
+  }
+}
+
+class Prey extends Species {
+  constructor(name, diet, lifespan, migrationPattern) {
+    super(name, diet, lifespan);
+    this.migrationPattern = migrationPattern;
+  }
+
+  predictMigration(season) {
+    if (season === 'wet') {
+      return 'No migration will occur.';
+    } else if (season === 'dry') {
+      return 'Migration will occur.';
+    } else {
+      return 'Unable to predict migration.';
     }
   }
-  
-  class Prey extends Species {
-    constructor(name, diet, lifespan, migrationPattern) {
-      super(name, diet, lifespan);
-      this.migrationPattern = migrationPattern;
-    }
-  
-    migrate() {
-      console.log(`${this.name} is migrating`);
-    }
+
+  displayInfo() {
+    console.log('--- Prey ---');
+    console.log(`Species: ${this.name}`);
+    console.log(`Diet: ${this.diet}`);
+    console.log(`Typical Lifespan: ${this.typicalLifespan} years`);
+    console.log(`Migration Patterns: ${this.migrationPatterns}`);
   }
-  
-  const lion = new Predator("Tiger", "Carnivore", 10, "Stalking");
-  const zebra = new Prey("Zebra", "Herbivore", 20, "Seasonal");
-  
-  lion.hunt(zebra);
-  zebra.migrate();
+}
+
+const lion = new Predator('Lion', 'carnivore', 10, 'Seasonal migration');
+lion.displayInfo();
+console.log(lion.predictMigration('dry'));
+console.log(`Mortality Year: ${lion.calculateMortalityYear(2010)}`);
+
+const zebra = new Prey('Zebra', 'herbivore', 20, 'No migration');
+zebra.displayInfo();
+console.log(zebra.predictMigration('wet'));
+console.log(`Mortality Year: ${zebra.calculateMortalityYear(2015)}`);
+
+
+// class Species {
+//   constructor(name, diet, typical_lifespan) {
+//     this.name = name;
+//     this.diet = diet;
+//     this.typical_lifespan = typical_lifespan;
+//     this.migration_patterns = '';
+//   }
+
+//   calculate_mortality_age(birth_year) {
+//     const death_age = birth_year + this.typical_lifespan;
+//     return death_age;
+//   }
+
+//   predict_migration(season) {
+//     if (season === 'dry') {
+//       this.migration_patterns = 'Migration will occur';
+//       return this.migration_patterns;
+//     } else if (season === 'wet') {
+//       this.migration_patterns = 'No migration will occur';
+//       return this.migration_patterns;
+//     } else {
+//       return 'Unable to predict migration';
+//     }
+//   }
+
+//   is_extinct() {
+//     const current_year = new Date().getFullYear();
+//     const expected_extinction_year = this.calculate_mortality_age(current_year);
+//     if (expected_extinction_year <= current_year) {
+//       return `${this.name} is extinct.`;
+//     } else {
+//       return `${this.name} is not extinct.`;
+//     }
+//   }
+// }
+
+// class Predator extends Species {
+//   constructor(name, diet, typical_lifespan, migration_patterns) {
+//     super(name, diet, typical_lifespan);
+//     this.migration_patterns = migration_patterns;
+//   }
+
+//   calculate_mortality_age(birth_year) {
+//     super.calculate_mortality_age(birth_year);
+//   }
+
+//   predict_migration(season) {
+//     super.predict_migration(season);
+//   }
+// }
+
+// class Prey extends Species {
+//   constructor(name, diet, typical_lifespan, migration_patterns) {
+//     super(name, diet, typical_lifespan);
+//     this.migration_patterns = migration_patterns;
+//   }
+
+//   calculate_mortality_age(birth_year) {
+//     super.calculate_mortality_age(birth_year);
+//   }
+
+//   predict_migration(season) {
+//     super.predict_migration(season);
+//   }
+// }
+
+// const species1 = new Species('Lion', 'carnivore', 8);
+// console.log(species1.is_extinct());
+
+// const predator1 = new Predator('Tiger', 'carnivore', 10, 'No migration');
+// console.log(predator1.is_extinct());
+// console.log(predator1.calculate_mortality_age());
+// console.log(predator1.predict_migration("wet"));
+
+// const prey1 = new Prey('Deer', 'herbivore', 5, 'No migration');
+// console.log(prey1.is_extinct());
+
+
+
   
 
 // **African Music Festival:** You're in charge of organizing a Pan-African music
@@ -115,65 +287,147 @@ class Species {
 //output: management of schedules,stage arrangements
 //process: determine classes and methods to use
 
+// class Artist {
+//     constructor(name, country,genre,musicalStyle,instruments) {
+//       this.name = name;
+//       this.country = country;
+//       this.genre=genre;
+//       this.musicalStyle=musicalStyle;
+//       this.instruments=instruments;
+//     }
+//   }
+  
+//   const artist1 = new Artist("Elani", "Kenya","love songs");
+//   const artist2 = new Artist("Imo", "South Sudan","pop");
+//   console.log(artist1);
+//   console.log(artist2);
+
+//   class Performance {
+//     constructor(artist, beginTime, endTime) {
+//       this.artist = artist;
+//       this.beginTime = beginTime;
+//       this.endTime = endTime;
+//     }
+//     perform(){
+//         console.log(`${this.artist} started performing at ${this.beginTime} and finished at ${this.endTime}`);
+//     }
+//   }
+
+//   const performance1 = new Performance("Grace", "11:06 pm", "3:20 am");
+//   const performance2 = new Performance("Ariana", "11:06 am", "1:20 pm");
+//   console.log(performance1);
+//   console.log(performance2);
+  
+//   class Stage {
+//     constructor(stageName, capacity) {
+//       this.stageName = stageName;
+//       this.capacity = capacity;
+//       this.performances = [];
+//     }
+//     theStage(){
+//         console.log(`The performance took place in ${this.stageName} and had a capacity of ${this.capacity}"`);
+//     }
+  
+//     addPerformance(performance) {
+//       this.performances.push(performance);
+//     }
+  
+//     performanceSchedule() {
+//       return this.performances.sort((x, y) => x.beginTime - y.beginTime);
+//     }
+//   }
+  
+//   const stage1 = new Stage("Kasarani", 7000);
+//   stage1.theStage()
+//   stage1.addPerformance(performance1);
+//   stage1.addPerformance(performance2);
+  
+//   console.log(stage1.performanceSchedule());
+  
+
+
+
+
 class Artist {
-    constructor(name, country,genre,musicalStyle,instruments) {
-      this.name = name;
-      this.country = country;
-      this.genre=genre;
-      this.musicalStyle=musicalStyle;
-      this.instruments=instruments;
-    }
-  }
-  
-
-  const artist1 = new Artist("Elani", "Kenya","love songs");
-  const artist2 = new Artist("Imo", "South Sudan","pop");
-  console.log(artist1);
-  console.log(artist2);
-
-
-  class Performance {
-    constructor(artist, beginTime, endTime) {
-      this.artist = artist;
-      this.beginTime = beginTime;
-      this.endTime = endTime;
-    }
-    perform(){
-        console.log(`${this.artist} started performing at ${this.beginTime} and finished at ${this.endTime}`);
-    }
+  constructor(country, name, musicalStyle, instruments) {
+    this.country = country;
+    this.name = name;
+    this.musicalStyle = musicalStyle;
+    this.instruments = instruments;
   }
 
-  const performance1 = new Performance("Grace", "11:06 pm", "3:20 am");
-  const performance2 = new Performance("Ariana", "11:06 am", "1:20 pm");
-  console.log(performance1);
-  console.log(performance2);
-  
-  class Stage {
-    constructor(stageName, capacity) {
-      this.stageName = stageName;
-      this.capacity = capacity;
-      this.performances = [];
-    }
-    theStage(){
-        console.log(`The performance took place in ${this.stageName} and had a capacity of ${this.capacity}"`);
-    }
-  
-    addPerformance(performance) {
-      this.performances.push(performance);
-    }
-  
-    performanceSchedule() {
-      return this.performances.sort((x, y) => x.beginTime - y.beginTime);
+  displayArtist() {
+    return `Artist Name: ${this.name}, Country: ${this.country}, Musical style: ${this.musicalStyle}`;
+  }
+}
+
+class Performance extends Artist {
+  constructor(country, name, musicalStyle, instruments) {
+    super(country, name, musicalStyle, instruments);
+  }
+
+  listsMusician() {
+    return `${this.name} plays this kind of music: ${this.musicalStyle}`;
+  }
+
+  performanceByMusic() {
+    if (this.musicalStyle === "rocky") {
+      return `${this.name} will perform last`;
+    } else {
+      return `${this.name} will perform in the early hours`;
     }
   }
+}
+
+class Stage extends Artist {
+  constructor(country, name, musicalStyle, instruments, capacity) {
+    super(country, name, musicalStyle, instruments);
+    this.capacity = capacity;
+  }
+
+  stageCapacity(capa) {
+    if (capa < this.capacity) {
+      return 'The stage is yet to get full';
+    } else if (capa === this.capacity) {
+      return 'The stage is at its full capacity';
+    } else {
+      return 'The stage is beyond its capacity';
+    }
+  }
+
+  findCompatibleStyles(instrument) {
+    const styles = {
+      guitar: ["Rock", "Blues", "Jazz", "Pop"],
+      piano: ["Classical", "Jazz", "Pop", "R&B"],
+      drums: ["Rock", "Pop", "Metal", "Funk"],
+      violin: ["Classical", "Baroque", "Folk", "Jazz"],
+      saxophone: ["Jazz", "Blues", "Funk", "R&B"]
+    };
+
+    if (instrument in styles) {
+      return styles[instrument];
+    } else {
+      return [];
+    }
+  }
+}
+
+const artist1 = new Artist("Kenya", "Nikita", "R&b", ["Guitar","Violin","Piano"]);
+const performance1 = new Performance("Morocco", "Ahmed", "rocky", ["Guitar","Violin","Piano"])
+const stage1 = new Stage("Nigeria", "Lagos Stadium", "Afro-beats", ["Guitar"], 1000);
+
+
+stage1.displayArtist();                                          
+console.log(stage1.stageCapacity(800));                           
+console.log(stage1.findCompatibleStyles("guitar"));               
+console.log(stage1.findCompatibleStyles("violin")); 
+console.log(performance1.performanceByMusic());              
   
-  const stage1 = new Stage("Kasarani", 7000);
-  stage1.theStage()
-  stage1.addPerformance(performance1);
-  stage1.addPerformance(performance2);
-  
-  console.log(stage1.performanceSchedule());
-  
+
+
+
+
+ 
 
 //   Create a class called Product with attributes for name, price, and quantity.
 //   Implement a method to calculate the total value of the product (price * quantity).
@@ -216,6 +470,47 @@ product7.calculateTotalValue();
 
 
 
+// 6
+class Student {
+  constructor(name, age, grades) {
+    this.name = name;
+    this.age = age;
+    this.grades = grades;
+  }
+
+  calculateAverageGrade() {
+    const totalGrades = this.grades.reduce((sum, grade) => sum + grade, 0);
+    const mean = totalGrades / this.grades.length;
+    return mean;
+  }
+
+  displayStudentInformation() {
+    return `Name: ${this.name}, Age: ${this.age}, Grades: ${this.grades}`;
+  }
+
+  hasPassed() {
+    const mean = this.calculateAverageGrade();
+
+    if (mean <= 60) {
+      return `${this.name} has passed with ${mean}`;
+    } else {
+      return `${this.name} has not passed`;
+    }
+  }
+}
+
+const student1 = new Student("Janet", 17, [60, 80, 90]);
+const student2 = new Student("Anna", 19, [80, 70, 30]);
+
+console.log(student1.calculateAverageGrade());
+console.log(student2.calculateAverageGrade());
+console.log(student2.displayStudentInformation());
+console.log(student2.hasPassed());
+console.log(student1.hasPassed());
+
+
+
+
 
 
 
@@ -230,10 +525,7 @@ product7.calculateTotalValue();
 
 //input:
 //output:
-// process:
-
-
-
+// process: determine class 
 
 
 
@@ -246,35 +538,153 @@ product7.calculateTotalValue();
 //output:add new books,search for books,keep track of available copies,diplay book details
 
 
-class LibraryCatalog{
-    constructor(numberOfBooks,categories,titles,author,year){
 
-        this.numberOfBooks=numberOfBooks;
-        this.categories=categories;
-        this.titles=titles;
-        this.author=author;
-        this.year=year;
-        this.books=[];
 
+
+
+
+class LibraryCatalog {
+  constructor() {
+    this.books = [];
+  }
+
+  addNewBook(title, author, year) {
+    const book = {
+      title: title,
+      author: author,
+      year: year,
+      copies: 1,
+    };
+
+    this.books.push(book);
+  }
+
+  searchForBooks(query) {
+    const results = this.books.filter((x) => {
+      return (
+        x.title.toLowerCase().includes(query.toLowerCase()) ||
+        x.author.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+
+    return results;
+  }
+
+  keepTrackOfCopies(title, action) {
+    const book = this.books.find((book) => book.title === title);
+
+    if (book) {
+      if (action === "add") {
+        book.copies++;
+      } else if (action === "remove") {
+        if (book.copies > 0) {
+          book.copies--;
+        } else {
+          console.log("No copies of this book are currently available.");
+        }
+      }
+    } else {
+      console.log("Book not found in the library catalog.");
     }
-    addNewBooks(book){
-        this.books.push(book);
+  }
 
+  displayBookDetails(title) {
+    const book = this.books.find((book) => book.title === title);
+
+    if (book) {
+      console.log(
+        `${book.title} is written by ${book.author} and was published in ${book.year}.`
+      );
+      console.log(`Available Copies: ${book.copies}`);
+    } else {
+      console.log("Book not found in the library catalog.");
     }
-    searchForBooks(){
-
-
-    }
-    keepTrackOfCopies(){
-
-
-    }
-    diplayBookDetails(){
-        console.log(`${this.title} is written by ${this.author}  and was published in the year ${this.year}`);
-
-    }
-
-
+  }
 }
 
-library=new LibraryCatalog(234,13,)
+
+const library = new LibraryCatalog();
+
+library.addNewBook("To Kill a Mockingbird", "Harper Lee", 1960);
+library.addNewBook("1984", "George Orwell", 1949);
+library.addNewBook("The originals", "Adam Grant", 1925);
+
+console.log(library.searchForBooks("mockingbird"));
+
+library.keepTrackOfCopies("To Kill a Mockingbird", "add");
+library.keepTrackOfCopies("To Kill a Mockingbird", "add");
+library.keepTrackOfCopies("To Kill a Mockingbird", "remove");
+
+library.displayBookDetails("To Kill a Mockingbird");
+
+
+
+
+
+// class FlightBooking {
+//   constructor() {
+//     this.flights = [];
+//   }
+
+//   searchFlights(destination, date) {
+//     return this.flights.filter(flight => flight.destination === destination && flight.date === date);
+//   }
+
+//   reserveSeats(flightNumber, customerName, numSeats) {
+//     const flight = this.flights.find(flight => flight.flightNumber === flightNumber);
+//     if (!flight) {
+//       throw new Error("Flight not found.");
+//     }
+
+//     if (flight.availableSeats >= numSeats) {
+//       flight.availableSeats -= numSeats;
+//       flight.passengers.push({ name: customerName, seats: numSeats });
+//       return true;
+//     }
+
+//     return false;
+//   }
+
+//   addFlight(flightNumber, destination, date, totalSeats) {
+//     this.flights.push({
+//       flightNumber,
+//       destination,
+//       date,
+//       totalSeats,
+//       availableSeats: totalSeats,
+//       passengers: []
+//     });
+//   }
+
+//   getBookingConfirmation(flightNumber, customerName) {
+//     const flight = this.flights.find(flight => flight.flightNumber === flightNumber);
+//     if (!flight) {
+//       throw new Error("Flight not found.");
+//     }
+
+//     const passenger = flight.passengers.find(passenger => passenger.name === customerName);
+//     if (!passenger) {
+//       throw new Error("Passenger not found.");
+//     }
+
+//     return {
+//       flightNumber: flight.flightNumber,
+//       destination: flight.destination,
+//       date: flight.date,
+//       customerName: passenger.name,
+//       bookedSeats: passenger.seats
+//     };
+//   }
+// }
+
+// const flightBooking = new FlightBooking();
+// flightBooking.addFlight("ABC123", "Singapore", "2023-07-10", 100);
+// flightBooking.addFlight("XYZ456", "Italy", "2023-08-15", 150);
+// console.log(flightBooking.searchFlights("New York", "2023-07-10"));
+// console.log(flightBooking.reserveSeats("ABC123", "Anna Monroe", 2));
+// console.log(flightBooking.getBookingConfirmation("ABC123", "Chris Daniels"));
+
+
+
+
+
